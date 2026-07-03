@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Courses | Student Course Registration System{% endblock %}
+{% block content %}
+<section class="section-heading">
+    <div>
+        <span class="eyebrow">Courses</span>
+        <h1>Enroll in courses or drop them anytime.</h1>
+        <p>Enrollment is checked on both the client side through the interface and the server side through Django validation and database constraints.</p>
+    </div>
+    <a href="{% url 'dashboard' %}" class="secondary-btn">Back to dashboard</a>
+</section>
+
+<section class="course-grid">
+    {% for course in courses %}
+        <article class="course-card card">
+            <div class="course-header">
+                <div>
+                    <h2>{{ course.code }}</h2>
+                    <p>{{ course.title }}</p>
+                </div>
+                <span class="badge">{{ course.credits }} credits</span>
+            </div>
+            <p class="course-description">{{ course.description|default:'No course description available.' }}</p>
+            <div class="course-meta">
+                <span>Capacity: {{ course.capacity }}</span>
+                <span>Enrolled: {{ course.enrolled_count }}</span>
+                <span>Seats left: {{ course.available_seats }}</span>
+            </div>
+            <div class="course-actions">
+                {% if course.id in enrolled_course_ids %}
+                    {% for enrollment in request.user.student_profile.enrollments.all %}
+                        {% if enrollment.course_id == course.id %}
+                            <form method="post" action="{% url 'drop_course' enrollment.id %}" data-confirm="Drop {{ course.code }} from your schedule?">
+                                {% csrf_token %}
+                                <button type="submit" class="secondary-btn danger-btn">Drop course</button>
+                            </form>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <form method="post" action="{% url 'enroll_course' course.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="primary-btn">Enroll</button>
+                    </form>
+                {% endif %}
+            </div>
+        </article>
+    {% empty %}
+        <div class="card empty-state">
+            <h2>No courses available yet.</h2>
+            <p>Add sample courses through the admin panel or the included seed migration.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

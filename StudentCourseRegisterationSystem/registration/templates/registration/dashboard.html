@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Student Course Registration System{% endblock %}
+{% block content %}
+<section class="hero-card dashboard-hero">
+    <div class="hero-copy">
+        <span class="eyebrow">Dashboard</span>
+        <h1>Hi {{ request.user.first_name|default:request.user.username }}, manage your semester.</h1>
+        <p>Your student profile and enrollment status are displayed below.</p>
+    </div>
+    <div class="stats-grid">
+        <article class="stat-card">
+            <strong>{{ enrollment_total }}</strong>
+            <span>Total enrollments</span>
+        </article>
+        <article class="stat-card">
+            <strong>{{ enrolled_courses|length }}</strong>
+            <span>Active courses</span>
+        </article>
+        <article class="stat-card">
+            <strong>{{ available_courses|length }}</strong>
+            <span>Available courses</span>
+        </article>
+    </div>
+</section>
+
+<section class="content-grid two-col">
+    <article class="panel card">
+        <h2>Student Profile</h2>
+        <dl class="profile-list">
+            <div><dt>Name</dt><dd>{{ request.user.get_full_name|default:request.user.username }}</dd></div>
+            <div><dt>Student ID</dt><dd>{{ profile.student_id }}</dd></div>
+            <div><dt>Email</dt><dd>{{ request.user.email }}</dd></div>
+            <div><dt>Major</dt><dd>{{ profile.major|default:'Not provided' }}</dd></div>
+            <div><dt>Phone</dt><dd>{{ profile.phone|default:'Not provided' }}</dd></div>
+        </dl>
+    </article>
+
+    <article class="panel card">
+        <h2>Enrolled Courses</h2>
+        {% if enrolled_courses %}
+            <div class="course-stack">
+                {% for course in enrolled_courses %}
+                    <div class="course-item compact">
+                        <div>
+                            <strong>{{ course.code }}</strong>
+                            <p>{{ course.title }}</p>
+                        </div>
+                        <span>{{ course.credits }} credits</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You have not enrolled in any courses yet.</p>
+        {% endif %}
+        <a href="{% url 'courses' %}" class="secondary-btn">Browse courses</a>
+    </article>
+</section>
+{% endblock %}

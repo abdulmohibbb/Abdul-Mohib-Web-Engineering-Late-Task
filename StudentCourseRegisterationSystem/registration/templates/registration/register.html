@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Register | Student Course Registration System{% endblock %}
+{% block content %}
+<section class="hero-card">
+    <div class="hero-copy narrow">
+        <span class="eyebrow">Student onboarding</span>
+        <h1>Create your registration profile.</h1>
+        <p>Fill in your student and account details to start enrolling in courses.</p>
+    </div>
+    <form method="post" class="auth-form card wide-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-grid">
+            {% for field in form %}
+                <div class="field-wrap">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="field-errors">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="primary-btn">Create account</button>
+        <p class="form-footer">Already registered? <a href="{% url 'login' %}">Login here</a>.</p>
+    </form>
+</section>
+{% endblock %}

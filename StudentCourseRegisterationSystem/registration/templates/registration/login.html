@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Login | Student Course Registration System{% endblock %}
+{% block content %}
+<section class="hero-card split-layout">
+    <div class="hero-copy">
+        <span class="eyebrow">Welcome back</span>
+        <h1>Sign in to manage your courses.</h1>
+        <p>Track your enrollments, add new classes, and drop courses from a responsive dashboard built with Django and SQLite.</p>
+    </div>
+    <form method="post" class="auth-form card">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <label for="id_username">Username</label>
+        {{ form.username }}
+        <label for="id_password">Password</label>
+        {{ form.password }}
+        <button type="submit" class="primary-btn">Login</button>
+        <p class="form-footer">No account yet? <a href="{% url 'register' %}">Register here</a>.</p>
+    </form>
+</section>
+{% endblock %}
